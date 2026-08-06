@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-sonli Umumta'lim Maktabi — Kundalik va Davomat Tizimi</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. FULLSCREEN LOGIN & REGISTRATION SCREEN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="logo-icon" style="margin:0 auto 12px auto; width:50px; height:50px; font-size:1.6rem;">5</div>
+                <h2>5-MAKTAB KUNDALIK TIZIMI</h2>
+                <p style="font-size:0.85rem; color:#64748b;">Tizimga kirish yoki ro'yxatdan o'tish</p>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form id="form-login" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Tizim Logini</label>
+                    <input type="text" id="login-username" class="form-control" style="width:100%;" placeholder="Login (masalan: direktor)" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Parol</label>
+                    <input type="password" id="login-password" class="form-control" style="width:100%;" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; padding:12px; font-size:1rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Tizimga Kirish
+                </button>
+
+                <div style="margin-top:16px; text-align:center; font-size:0.88rem;">
+                    Hisobingiz yo'qmi? <a href="#" onclick="toggleAuthMode('register'); return false;" style="color:#2563eb; font-weight:700; text-decoration:none;">Ro'yxatdan O'tish</a>
+                </div>
+
+                <!-- DIRECT DEMO CREDENTIALS HINT -->
+                <div style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:16px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:8px; text-transform:uppercase; text-align:center;">
+                        Direktor Kirish Ma'lumotlari (1-Click)
+                    </div>
+                    <button type="button" class="btn btn-sm" style="width:100%; background:#eff6ff; color:#1d4ed8; font-weight:700; padding:10px;" onclick="quickLogin('direktor', 'direktor5maktab')">
+                        👑 Direktor bo'lib kirish (direktor / direktor5maktab)
+                    </button>
+                </div>
+            </form>
+
+            <!-- REGISTRATION FORM -->
+            <form id="form-register" style="display:none;" onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">To'liq F.I.SH *</label>
+                    <input type="text" id="reg-fullname" class="form-control" style="width:100%;" placeholder="Karimov Botir Shavkat o'g'li" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Rolingiz *</label>
+                        <select id="reg-role" class="form-control" style="width:100%;" onchange="toggleRegFields(this.value)">
+                            <option value="Teacher">O'qituvchi</option>
+                            <option value="Student">O'quvchi</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;" id="reg-class-container">
+                        <label class="form-label">Sinf</label>
+                        <select id="reg-class" class="form-control" style="width:100%;">
+                            <option value="5-A">5-A sinf</option>
+                            <option value="5-B">5-B sinf</option>
+                            <option value="6-A">6-A sinf</option>
+                            <option value="7-A">7-A sinf</option>
+                            <option value="8-A">8-A sinf</option>
+                            <option value="9-A">9-A sinf</option>
+                            <option value="10-A">10-A sinf</option>
+                            <option value="11-A">11-A sinf</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="reg-subject-container">
+                    <label class="form-label">O'qitadigan Fan</label>
+                    <input type="text" id="reg-subject" class="form-control" style="width:100%;" placeholder="Masalan: Fizika yoki Matematika">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon Raqamingiz *</label>
+                    <input type="text" id="reg-phone" class="form-control" style="width:100%;" placeholder="+998 90 123 45 67" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Login *</label>
+                        <input type="text" id="reg-username" class="form-control" style="width:100%;" placeholder="login_123" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Parol *</label>
+                        <input type="password" id="reg-password" class="form-control" style="width:100%;" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div style="background:#fef3c7; border:1px solid #fde68a; padding:10px; border-radius:8px; font-size:0.8rem; color:#92400e; margin-bottom:16px;">
+                    📱 <strong>SMS Tasdiqlash:</strong> Ro'yxatdan o'tgach, Direktorga SMS yuboriladi. Direktor tasdiqlagandan so'ng tizimga kira olasiz.
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; padding:12px; font-size:1rem;">
+                    <i class="fa-solid fa-paper-plane"></i> So'rov Yuborish (SMS)
+                </button>
+
+                <div style="margin-top:16px; text-align:center; font-size:0.88rem;">
+                    Hisobingiz bormi? <a href="#" onclick="toggleAuthMode('login'); return false;" style="color:#2563eb; font-weight:700; text-decoration:none;">Tizimga Kirish</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. TOP NAVIGATION BAR -->
+    <header id="top-bar" style="display:none;">
+        <div class="logo-area">
+            <div class="logo-icon">5</div>
+            <div>
+                <div style="font-size:1.05rem;">5-MAKTAB</div>
+                <div style="font-size:0.75rem; color:#94a3b8; font-weight:500;">Elektron Kundalik va Davomat</div>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar" id="user-avatar">D</div>
+            <div style="text-align:right;">
+                <div id="user-name" style="font-size:0.88rem; font-weight:700;">Karimov Shavkat</div>
+                <div id="user-role-badge" style="font-size:0.75rem; color:#60a5fa;">Direktor</div>
+            </div>
+            <button class="btn btn-sm" id="btn-director-profile" style="background:rgba(255,255,255,0.15); color:white; margin-left:8px;" onclick="openDirectorProfileModal()">
+                <i class="fa-solid fa-gear"></i> Sozlamalar
+            </button>
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.15); color:white; margin-left:8px;" onclick="handleLogout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Chiqish
+            </button>
+        </div>
+    </header>
+
+    <!-- 3. MAIN APP LAYOUT -->
+    <div id="app-layout" style="display:none;">
+        <nav id="sidebar">
+            <div class="nav-title" id="nav-section-title">DIREKTOR MENYUSI</div>
+            <div id="sidebar-nav"></div>
+        </nav>
+
+        <main id="content-area"></main>
+    </div>
+
+    <!-- MODAL: ADD DYNAMIC CLASS (DIREKTOR SINF QO'SHISH: 1-11 VERIFICATION & LETTER) -->
+    <div class="modal-overlay" id="modal-add-class">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-school-flag text-primary"></i> Yangi Sinf Yaratish</div>
+                <button class="close-btn" onclick="closeModal('modal-add-class')">&times;</button>
+            </div>
+            <form id="form-add-class" onsubmit="handleSaveClass(event)">
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Sinf Raqami (1 - 11) *</label>
+                        <input type="number" id="add-class-number" class="form-control" style="width:100%;" min="1" max="11" placeholder="Masalan: 5" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Sinf Harfi (A, B, V...) *</label>
+                        <input type="text" id="add-class-letter" class="form-control" style="width:100%;" placeholder="Masalan: B" required>
+                    </div>
+                </div>
+                <div style="background:#eff6ff; padding:10px; border-radius:8px; font-size:0.8rem; color:#1e40af; margin-bottom:16px;">
+                    ℹ️ <strong>Eslatma:</strong> Sinf raqami strictly <strong>1 va 11</strong> orasida bo'lishi shart. Yaratilgan sinf barcha tizim menyulariga darhol qo'shiladi.
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-add-class')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Sinfni Yaratish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT TIMETABLE (DIRECTOR TIMETABLE EDITOR) -->
+    <div class="modal-overlay" id="modal-edit-timetable">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-calendar-pen text-primary"></i> Dars Jadvaliga Dars Biriktirish</div>
+                <button class="close-btn" onclick="closeModal('modal-edit-timetable')">&times;</button>
+            </div>
+            <form id="form-edit-timetable" onsubmit="handleSaveTimetable(event)">
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Hafta Kuni</label>
+                        <select id="tt-day" class="form-control" style="width:100%;">
+                            <option value="Dushanba">Dushanba</option>
+                            <option value="Seshanba">Seshanba</option>
+                            <option value="Chorshanba">Chorshanba</option>
+                            <option value="Payshanba">Payshanba</option>
+                            <option value="Juma">Juma</option>
+                            <option value="Shanba">Shanba</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Dars Soati (1-6)</label>
+                        <select id="tt-lesson-num" class="form-control" style="width:100%;">
+                            <option value="1">1-dars</option>
+                            <option value="2">2-dars</option>
+                            <option value="3">3-dars</option>
+                            <option value="4">4-dars</option>
+                            <option value="5">5-dars</option>
+                            <option value="6">6-dars</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dars Fani Nomi *</label>
+                    <input type="text" id="tt-subject" class="form-control" style="width:100%;" placeholder="Masalan: Matematika" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">O'qituvchi F.I.SH</label>
+                        <input type="text" id="tt-teacher-name" class="form-control" style="width:100%;" placeholder="Qodirov Bekzod">
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Xona Raqami</label>
+                        <input type="text" id="tt-room" class="form-control" style="width:100%;" placeholder="204-xona">
+                    </div>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-edit-timetable')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Jadvalga Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DIRECTOR UNIVERSAL USER EDIT -->
+    <div class="modal-overlay" id="modal-edit-any-user">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-user-pen text-primary"></i> Foydalanuvchi Ma'lumotlarini Tahrirlash</div>
+                <button class="close-btn" onclick="closeModal('modal-edit-any-user')">&times;</button>
+            </div>
+            <form id="form-edit-any-user" onsubmit="handleSaveAnyUser(event)">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label class="form-label">F.I.SH (Ism-Familiyasi) *</label>
+                    <input type="text" id="edit-user-fullname" class="form-control" style="width:100%;" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Roli</label>
+                        <select id="edit-user-role" class="form-control" style="width:100%;">
+                            <option value="Director">👑 Direktor</option>
+                            <option value="Teacher">👩‍🏫 O'qituvchi</option>
+                            <option value="Student">👨‍🎓 O'quvchi</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Sinfi / Fani</label>
+                        <input type="text" id="edit-user-class-subject" class="form-control" style="width:100%;" placeholder="5-A yoki Fizika">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon Raqami</label>
+                    <input type="text" id="edit-user-phone" class="form-control" style="width:100%;" placeholder="+998 90 123 45 67">
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Tizim Logini *</label>
+                        <input type="text" id="edit-user-username" class="form-control" style="width:100%;" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Tizim Paroli *</label>
+                        <input type="text" id="edit-user-password" class="form-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-edit-any-user')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DIRECTOR SELF PROFILE EDIT -->
+    <div class="modal-overlay" id="modal-director-profile">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-user-gear text-primary"></i> Direktor Profil Sozlamalari</div>
+                <button class="close-btn" onclick="closeModal('modal-director-profile')">&times;</button>
+            </div>
+            <form id="form-director-profile" onsubmit="handleSaveDirectorProfile(event)">
+                <div class="form-group">
+                    <label class="form-label">Direktor F.I.SH (Ism va Familiya) *</label>
+                    <input type="text" id="dir-profile-fullname" class="form-control" style="width:100%;" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yangi Tizim Logini *</label>
+                    <input type="text" id="dir-profile-username" class="form-control" style="width:100%;" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yangi Parol *</label>
+                    <input type="text" id="dir-profile-password" class="form-control" style="width:100%;" required>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-director-profile')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD STUDENT REMARK -->
+    <div class="modal-overlay" id="modal-add-remark">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-comment-medical text-primary"></i> O'quvchiga Izoh / Eslatmak Yozish</div>
+                <button class="close-btn" onclick="closeModal('modal-add-remark')">&times;</button>
+            </div>
+            <form id="form-add-remark" onsubmit="handleSaveRemark(event)">
+                <input type="hidden" id="remark-student-id">
+                <div class="form-group">
+                    <label class="form-label">O'quvchi</label>
+                    <input type="text" id="remark-student-name" class="form-control" style="width:100%;" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Izoh Turi</label>
+                    <select id="remark-category" class="form-control" style="width:100%;">
+                        <option value="Odob-ahloq">Odob-ahloq va intizom</option>
+                        <option value="O'zlashtirish">O'zlashtirish va darsga tayyorgarlik</option>
+                        <option value="Tashakkurnoma">🌟 Tashakkurnoma va Faollik</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Izoh / Eslatma Matni *</label>
+                    <textarea id="remark-comment" class="form-control" style="width:100%; height:90px;" placeholder="Masalan: Darsda juda faol qatnashdi va tenglamani tez yechdi." required></textarea>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-add-remark')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT TEACHER -->
+    <div class="modal-overlay" id="modal-teacher">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-teacher-title"><i class="fa-solid fa-chalkboard-user text-primary"></i> Yangi O'qituvchi Qo'shish</div>
+                <button class="close-btn" onclick="closeModal('modal-teacher')">&times;</button>
+            </div>
+            <form id="form-teacher" onsubmit="handleSaveTeacher(event)">
+                <input type="hidden" id="tch-id">
+                <div class="form-group">
+                    <label class="form-label">O'qituvchining F.I.SH *</label>
+                    <input type="text" id="tch-fullname" class="form-control" style="width:100%;" placeholder="Tursunova Nilufar Qobilovna" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Dars Beradigan Fani *</label>
+                        <input type="text" id="tch-subject" class="form-control" style="width:100%;" placeholder="Fizika" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Telefon Raqami</label>
+                        <input type="text" id="tch-phone" class="form-control" style="width:100%;" placeholder="+998 90 123 45 67">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Biriktirilgan Sinflar (Vergul bilan ajrating)</label>
+                    <input type="text" id="tch-classes" class="form-control" style="width:100%;" placeholder="5-A, 5-B, 9-A">
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Tizim Logini *</label>
+                        <input type="text" id="tch-username" class="form-control" style="width:100%;" placeholder="fizika_oqt" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Paroli *</label>
+                        <input type="text" id="tch-password" class="form-control" style="width:100%;" value="123" required>
+                    </div>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-teacher')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD STUDENT -->
+    <div class="modal-overlay" id="modal-add-student">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-user-plus text-primary"></i> Yangi O'quvchi Qo'shish</div>
+                <button class="close-btn" onclick="closeModal('modal-add-student')">&times;</button>
+            </div>
+            <form id="form-add-student" onsubmit="handleAddStudent(event)">
+                <div class="form-group">
+                    <label class="form-label">O'quvchining F.I.SH *</label>
+                    <input type="text" id="add-st-name" class="form-control" style="width:100%;" placeholder="Abdullayev Temur Shavkat o'g'li" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sinf *</label>
+                    <select id="add-st-class" class="form-control" style="width:100%;" required>
+                        <option value="5-A">5-A sinf</option>
+                        <option value="5-B">5-B sinf</option>
+                        <option value="6-A">6-A sinf</option>
+                        <option value="7-A">7-A sinf</option>
+                        <option value="8-A">8-A sinf</option>
+                        <option value="9-A">9-A sinf</option>
+                        <option value="10-A">10-A sinf</option>
+                        <option value="11-A">11-A sinf</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ota-onasi telefoni</label>
+                    <input type="text" id="add-st-phone" class="form-control" style="width:100%;" placeholder="+998 90 123 45 67">
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Tizim Logini *</label>
+                        <input type="text" id="add-st-username" class="form-control" style="width:100%;" placeholder="temur_5a" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Paroli *</label>
+                        <input type="text" id="add-st-password" class="form-control" style="width:100%;" value="123" required>
+                    </div>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-add-student')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CHANGE PASSWORD -->
+    <div class="modal-overlay" id="modal-change-password">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-key text-primary"></i> Login & Parolni O'zgartirish</div>
+                <button class="close-btn" onclick="closeModal('modal-change-password')">&times;</button>
+            </div>
+            <form id="form-change-password" onsubmit="handleChangePassword(event)">
+                <input type="hidden" id="change-pwd-st-id">
+                <div class="form-group">
+                    <label class="form-label">O'quvchi</label>
+                    <input type="text" id="change-pwd-st-name" class="form-control" style="width:100%;" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yangi Login</label>
+                    <input type="text" id="change-pwd-username" class="form-control" style="width:100%;" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yangi Parol</label>
+                    <input type="text" id="change-pwd-password" class="form-control" style="width:100%;" required placeholder="Kamida 4 ta belgi">
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-change-password')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: GRADE ENTRY -->
+    <div class="modal-overlay" id="modal-save-grade">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-pen-to-square text-primary"></i> Baholash (10 Ballik Tizim)</div>
+                <button class="close-btn" onclick="closeModal('modal-save-grade')">&times;</button>
+            </div>
+            <form id="form-save-grade" onsubmit="handleSaveGrade(event)">
+                <input type="hidden" id="grade-student-id">
+                <div class="form-group">
+                    <label class="form-label">O'quvchi</label>
+                    <input type="text" id="grade-student-name" class="form-control" style="width:100%;" readonly>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Dars Bahosi (1-10 ball)</label>
+                        <select id="grade-val" class="form-control" style="width:100%;">
+                            <option value="10">10 ball (A'lo)</option>
+                            <option value="9">9 ball (A'lo)</option>
+                            <option value="8">8 ball (Yaxshi)</option>
+                            <option value="7">7 ball (Yaxshi)</option>
+                            <option value="6">6 ball (Qoniqarli)</option>
+                            <option value="5">5 ball (Qoniqarli)</option>
+                            <option value="4">4 ball (Qoniqarsiz)</option>
+                            <option value="3">3 ball (Qoniqarsiz)</option>
+                            <option value="2">2 ball (Yomon)</option>
+                            <option value="1">1 ball (Yomon)</option>
+                            <option value="Q">Q (Qatnashmadi)</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Sana</label>
+                        <input type="date" id="grade-date" class="form-control" style="width:100%;" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dars Mavzusi</label>
+                    <input type="text" id="grade-topic" class="form-control" style="width:100%;" placeholder="Mavzu nomi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Uy Vazifasi</label>
+                    <input type="text" id="grade-homework" class="form-control" style="width:100%;" placeholder="Mashq va misollar">
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-save-grade')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: BSB & CHSB ENTRY -->
+    <div class="modal-overlay" id="modal-save-bsb">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-award text-primary"></i> BSB (50 ball) va CHSB (40 ball)</div>
+                <button class="close-btn" onclick="closeModal('modal-save-bsb')">&times;</button>
+            </div>
+            <form id="form-save-bsb" onsubmit="handleSaveBsb(event)">
+                <input type="hidden" id="bsb-student-id">
+                <div class="form-group">
+                    <label class="form-label">O'quvchi</label>
+                    <input type="text" id="bsb-student-name" class="form-control" style="width:100%;" readonly>
+                </div>
+                <div class="form-group" style="display:flex; gap:12px;">
+                    <div style="flex:1;">
+                        <label class="form-label">BSB 1 (max 50 ball)</label>
+                        <input type="number" id="bsb1-score" class="form-control" style="width:100%;" min="0" max="50" placeholder="0-50" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">BSB 2 (max 50 ball)</label>
+                        <input type="number" id="bsb2-score" class="form-control" style="width:100%;" min="0" max="50" placeholder="0-50" required>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">CHSB (max 40 ball)</label>
+                        <input type="number" id="chsb-score" class="form-control" style="width:100%;" min="0" max="40" placeholder="0-40" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="background:#f1f5f9; padding:12px; border-radius:8px; font-size:0.82rem; color:#475569;">
+                        ℹ️ <strong>Baholash formulasi:</strong> <br>
+                        - BSB1 va BSB2: maksimal <strong>50 ball</strong>. <br>
+                        - CHSB: maksimal <strong>40 ball</strong>. <br>
+                        Natija avtomatik ravishda 10 ballik va foizlik chorak bahosiga aylantiriladi.
+                    </div>
+                </div>
+                <div style="display:flex; justify-end; gap:10px; margin-top:24px;">
+                    <button type="button" class="btn" style="background:#e2e8f0;" onclick="closeModal('modal-save-bsb')">Bekor qilish</button>
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP JAVASCRIPT -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
