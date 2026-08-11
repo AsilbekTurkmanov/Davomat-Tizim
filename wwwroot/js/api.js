@@ -823,14 +823,22 @@ async function fetchApi(endpoint, options = {}) {
             ...options
         });
 
-        const contentType = response.headers.get('content-type');
+        const contentType = response.headers.get('content-type') || '';
         // If static host returns HTML (e.g. 404/405 page from GitHub Pages), fall back to LocalStorage engine
-        if (!response.ok || (contentType && contentType.includes('text/html'))) {
+        if (!response.ok || contentType.includes('text/html') || contentType.includes('text/plain')) {
             return handleMockApi(endpoint, options);
         }
 
-        const data = await response.json();
-        return data;
+        const text = await response.text();
+        if (!text || text.trim().startsWith('<')) {
+            return handleMockApi(endpoint, options);
+        }
+
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return handleMockApi(endpoint, options);
+        }
     } catch (error) {
         console.warn(`API call failed for [${endpoint}]. Falling back to LocalStorage Demo engine...`);
         return handleMockApi(endpoint, options);

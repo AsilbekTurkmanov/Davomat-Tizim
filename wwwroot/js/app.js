@@ -1,4 +1,4 @@
-import { Api } from './api.js';
+import { Api } from './api.js?v=20260811_v2';
 
 // GLOBAL APP STATE
 let state = {
